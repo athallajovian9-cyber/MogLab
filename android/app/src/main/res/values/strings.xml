@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MogLab</string>
+    <string name="title_activity_main">MogLab</string>
+    <string name="package_name">io.vortex.moglab</string>
+    <string name="custom_url_scheme">io.vortex.moglab</string>
+</resources>

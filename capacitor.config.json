@@ -1,0 +1,6 @@
+{
+  "appId": "io.vortex.moglab",
+  "appName": "MogLab",
+  "webDir": "www",
+  "server": { "androidScheme": "https" }
+}

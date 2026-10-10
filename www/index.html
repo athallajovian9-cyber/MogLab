@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MogLab</title>
+<style>
+  :root{--bg:#0d0b16;--panel:#17142a;--gold:#f5c542;--gold2:#b8860b;--blue:#4f8cff;
+        --dim:#8d87ad;--cream:#f2eeff;--green:#22c55e;--coral:#ff8b75;}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--cream);min-height:100vh;font-family:-apple-system,Segoe UI,Roboto,sans-serif;
+       padding:16px;padding-bottom:calc(20px+env(safe-area-inset-bottom))}
+  .screen{display:none;max-width:540px;margin:0 auto;animation:fade .3s}
+  .screen.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+  h1{font-size:34px;font-weight:900;letter-spacing:1px}
+  h1 span{color:var(--gold)}
+  .tag{color:var(--dim);font-size:14px;margin-top:6px}
+  .center{text-align:center}
+  .big{width:100%;height:64px;border:none;border-radius:18px;background:var(--gold);
+       color:#171408;font-size:20px;font-weight:900;margin-top:24px;cursor:pointer}
+  .big:active{transform:scale(.98)}
+  .ghost{width:100%;height:50px;border:1.5px solid #2c2749;border-radius:14px;background:transparent;
+       color:var(--dim);font-size:15px;font-weight:700;margin-top:12px;cursor:pointer}
+  #camWrap{position:relative;width:100%;aspect-ratio:3/4;background:#08070e;border-radius:20px;
+       overflow:hidden;margin-top:12px}
+  video,#ov{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+  #camOff{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+       color:var(--dim);font-size:15px;padding:24px;text-align:center}
+  .card{background:var(--panel);border:1px solid #241f42;border-radius:16px;padding:14px;margin-top:10px}
+  .row{display:flex;justify-content:space-between;align-items:center}
+  .chip{display:inline-block;background:#241f42;border-radius:8px;padding:3px 9px;font-size:11px;
+       color:var(--dim);margin-left:6px}
+  .barw{height:9px;background:#241f42;border-radius:6px;overflow:hidden;margin-top:7px}
+  .bar{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));width:0%;
+       border-radius:6px;transition:width .8s}
+  #scoreBig{font-size:74px;font-weight:900;color:var(--gold);line-height:1}
+  #rank{font-size:17px;font-weight:900;letter-spacing:2px;color:var(--cream);margin-top:4px}
+  .mname{font-weight:800;font-size:15px}
+  .mval{color:var(--gold);font-weight:900;font-size:15px}
+  .note{font-size:12.5px;color:var(--dim);margin-top:6px;line-height:1.45}
+  .ex .row{align-items:flex-start}
+  .ex h3{font-size:16.5px;font-weight:900}
+  .ex .dose{color:var(--gold);font-weight:800;font-size:13.5px;margin-top:2px}
+  .ex .steps{font-size:13.5px;color:#c9c3e8;margin-top:7px;line-height:1.55}
+  .ex .why{font-size:12.5px;color:var(--dim);margin-top:7px;font-style:italic}
+  .tick{width:34px;height:34px;min-width:34px;border-radius:11px;border:2px solid #35306b;
+       background:transparent;font-size:17px;color:transparent;cursor:pointer;font-weight:900}
+  .tick.done{background:var(--green);border-color:var(--green);color:#062}
+  .gloww{height:16px;background:#241f42;border-radius:9px;overflow:hidden;margin-top:14px}
+  .glow{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#f5c542);transition:width .6s}
+  .scanmsg{text-align:center;color:var(--gold);font-weight:800;margin-top:10px;font-size:15px}
+  .mult{color:var(--gold);font-weight:900}
+  .donepanel{background:#10240f;border:1.5px solid var(--green);border-radius:18px;
+       padding:16px;margin-top:14px;text-align:center;display:none}
+  .foot{color:var(--dim);font-size:11.5px;text-align:center;margin-top:16px;line-height:1.5}
+  b.gold{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="screen on" id="sHome">
+  <div class="center" style="margin-top:36px">
+    <div style="font-size:56px">🗿</div>
+    <h1>MOG<span>LAB</span></h1>
+    <div class="tag">Scan your face. Get your Mog Score against the<br><b class="gold">Chico Lachowski</b> benchmark.<br>Train your weakest points — <b class="gold">zero products</b>, water + body only.</div>
+  </div>
+  <div class="card">
+    <div class="row"><span class="mname">👁 What the scan reads</span></div>
+    <div class="note">Facial thirds harmony · eye-area tilt · symmetry · face shape —
+      measured live from your camera with on-device face landmarks (nothing is uploaded).</div>
+  </div>
+  <div class="card">
+    <div class="row"><span class="mname">🏋️ The plan</span></div>
+    <div class="note">Weakest traits get specific exercises: mewing holds, cold-water sculpting,
+      lymph massage, posture work, and a 1.5&nbsp;L bottle burner. Everything uses water,
+      furniture or your own body — <b>no equipment to buy</b>.</div>
+  </div>
+  <button class="big" onclick="goScan()">SCAN MY FACE</button>
+  <div class="foot">Entertainment glow-up tool — not medical advice.<br>Mog responsibly.</div>
+</div>
+
+<!-- SCAN -->
+<div class="screen" id="sScan">
+  <div class="row" style="margin-top:6px">
+    <h1 style="font-size:24px">FACE <span>SCAN</span></h1>
+    <button class="ghost" style="width:auto;margin:0;padding:0 14px" onclick="stopScan()">✕</button>
+  </div>
+  <div id="camWrap">
+    <video id="video" playsinline autoplay muted></video>
+    <canvas id="ov"></canvas>
+    <div id="camOff">starting camera…</div>
+  </div>
+  <div class="scanmsg" id="scanMsg">position your full face in the frame…</div>
+  <div class="foot" id="scanErr"></div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="sResult">
+  <div class="center" style="margin-top:14px">
+    <div style="font-size:30px">✨</div>
+    <div style="color:var(--dim);font-size:13px;letter-spacing:2px;font-weight:800">YOUR MOG SCORE</div>
+    <div id="scoreBig">–</div>
+    <div id="rank">READING…</div>
+    <div class="tag" id="scoreNote"></div>
+  </div>
+  <div id="metrics"></div>
+  <div class="donepanel" id="weakBox">
+    <b class="gold" style="font-size:15px">🔻 WEAKEST LINKS FOUND</b>
+    <div class="note" id="weakList"></div>
+  </div>
+  <button class="big" onclick="goPlan()">GET MY MOG PLAN →</button>
+  <button class="ghost" onclick="goScan()">↻ rescan</button>
+</div>
+
+<!-- PLAN -->
+<div class="screen" id="sPlan">
+  <div class="row" style="margin-top:6px">
+    <div><h1 style="font-size:26px">MOG <span>PLAN</span></h1>
+      <div class="tag" id="dayTag">day 1 · tailored to your scan</div></div>
+    <div class="center"><div style="font-size:12px;color:var(--dim)">GLOW</div>
+      <div class="mult" id="glowPct" style="font-size:24px">0%</div></div>
+  </div>
+  <div class="gloww"><div class="glow" id="glowBar"></div></div>
+  <div id="exList"></div>
+  <div class="donepanel" id="dayDone">
+    <div style="font-size:34px">🏆</div>
+    <b style="color:var(--green)">DAY COMPLETE — you're mogging tomorrow.</b>
+    <div class="note">Come back daily. Streak: <b class="gold" id="streakN">1</b> 🔥</div>
+  </div>
+  <button class="ghost" onclick="goScan()">↻ new scan (recalibrate)</button>
+  <div class="foot">Chico has equal thirds, a balanced mandible and calm posture.<br>You can't buy that — you train it.</div>
+</div>
+
+<video id="video2" style="display:none" playsinline></video>
+
+<script type="module">
+import {FilesetResolver, FaceLandmarker} from './vision/vision_bundle.mjs';
+
+/* ---------- metric engine ---------- */
+const D=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function metrics(lm){
+  const g=i=>lm[i];
+  const fw=D(g(234),g(454)), fh=D(g(10),g(152));
+  const ratio=fh/fw;
+  const shape = ratio>=1.28?'Long / Oval':(ratio<=1.08?'Round':'Oval');
+  const shapeScore = ratio>=1.13&&ratio<=1.30?100:(ratio<1.13?74:86);
+  const hairY=g(10).y, eyeY=(g(33).y+g(263).y)/2, mouthY=(g(13).y+g(14).y)/2, chinY=g(152).y;
+  const upper=eyeY-hairY, lower=chinY-mouthY;
+  const bal=Math.min(upper,lower)/Math.max(upper,lower);
+  const thirdsScore=Math.round(bal*100);
+  const tiltL=Math.atan2(g(33).y-g(133).y, Math.abs(g(33).x-g(133).x))*180/Math.PI;
+  const tiltR=Math.atan2(g(263).y-g(362).y, Math.abs(g(263).x-g(362).x))*180/Math.PI;
+  const tilt=(tiltL+tiltR)/2;                       // +deg = outer corner up
+  const eyeScore=Math.max(0,Math.round(100-Math.abs(tilt-6)*7));
+  const faceMidX=(g(234).x+g(454).x)/2;
+  const eyeMidX=(g(33).x+g(133).x+g(362).x+g(263).x)/4;
+  const skew=Math.abs(eyeMidX-faceMidX)/fw;
+  const tiltDiff=Math.abs(tiltL-tiltR);
+  const symScore=Math.max(0,Math.round(100-skew*300-tiltDiff*4));
+  const overall=Math.round(thirdsScore*.32+eyeScore*.26+symScore*.24+shapeScore*.18);
+  return {fw,fh,shape,shapeScore,thirdsScore,eyeScore,symScore,overall,
+          tilt:+tilt.toFixed(1),lowerShare:+(lower/(upper+lower)).toFixed(2)};
+}
+const rankOf=s=>s>=90?['CHICO ENERGY ⚡','the benchmark himself is nervous']
+  :s>=75?['MOG CANDIDATE','genuinely above average — sharpen the weak links']
+  :s>=60?['PRETTY BOY','solid base, the plan will chisel it']
+  :['FRESHMAN FACE','raw material — the glow-up arc starts today'];
+
+/* ---------- exercise catalog (ZERO products: water / body / furniture) ---------- */
+const EX={
+  mew:{i:'👅',n:'Mew Hold',d:'60s × 5 rounds',t:'🤚 body only',
+    s:['Tongue fully on the palate (not the teeth), lips closed','Teeth lightly touching, swallow gently','Breathe through your nose the whole time'],
+    w:'Trains the posture behind a balanced lower third — Chico’s mandible balance starts here.'},
+  tuck:{i:'🪿',n:'Chin Tucks',d:'10 reps × 3, hold 5s',t:'🧱 wall',
+    s:['Sit or stand tall, look straight ahead','Slide your head straight back (make a double chin)','Hold 5s, release slowly'],
+    w:'Fixes forward-head posture that hides your jawline behind your neck.'},
+  splash:{i:'💧',n:'Cold Water Sculpt',d:'60s, morning + night',t:'💧 tap water',
+    s:['Finish your wash with 30s of cold water on the face','Press (don’t rub) the jawline with cold water 10s each side','Pat dry immediately'],
+    w:'Cold water de-puffs the lower face — temporary sharpness that stacks daily.'},
+  eye20:{i:'👀',n:'20-20-20 Rest',d:'every 20 min, 20s',t:'👁 no gear',
+    s:['Every 20 min of screens, look 20 feet away','Blink fully 10 times','Hold relaxed gaze 20 seconds'],
+    w:'Strained eyes look tired — relaxed eyes read bright and almond-shaped.'},
+  icesplash:{i:'🧊',n:'Cold Eye Splash',d:'30s, mornings',t:'💧 tap water',
+    s:['Splutter cold water over closed eyes 10 seconds','Repeat 3×','Follow with your normal routine'],
+    w:'Shrinks morning eye puffiness — the almond-eye look Chico is known for.'},
+  massage:{i:'💆',n:'Lymph Massage',d:'60s × 2',t:'🤚 hands only',
+    s:['Fingertips from nose sides outward along the cheekbone','Light pressure, 10 slow sweeps each side','Finish down the neck to the collarbone'],
+    w:'Drains fluid so both sides match — symmetry is half your Mog Score.'},
+  fish:{i:'🐟',n:'Fish Face Stretch',d:'hold 10s × 5',t:'🤸 face only',
+    s:['Suck your cheeks in like a fish','Smile hard against the suction','Hold 10s, relax, repeat'],
+    w:'Works cheek support muscles so your mid-face looks lifted, not flat.'},
+  wall:{i:'🧍',n:'Wall Stand',d:'2 minutes',t:'🧱 wall',
+    s:['Heels, glutes, shoulders and head touching the wall','Chin parallel to the floor, breathe deep','Hold while counting slow breaths'],
+    w:'Posture is frame presence — Chico’s 6’3” carriage is all alignment.'},
+  rolls:{i:'🔄',n:'Shoulder Rolls',d:'15 × 3, backwards',t:'🤸 body only',
+    s:['Arms relaxed at your sides','Big slow circles backwards','Squeeze shoulder blades at the top'],
+    w:'Opens the chest so your head stops sinking forward into your jaw.'},
+  hydro:{i:'🚰',n:'8-Glass Water',d:'fill the tracker',t:'💧 water only',
+    s:['One glass each morning, keep the count in the app','Your skin’s entire glow budget is here','Zero sugar drinks — water only'],
+    w:'Hydrated skin outperforms any product — and this plan buys nothing.'},
+  burner:{i:'🔥',n:'Bottle Burner',d:'3 rounds: 15 squats · 10 rows/side · 10 push-ups',t:'💧 1.5 L bottle + 🛏 bed',
+    s:['Hold a filled 1.5 L bottle at your chest: 15 goblet squats','Bottle row 10 each arm (brace on a chair), back flat','Incline push-ups hands on bed edge ×10, rest 60s'],
+    w:'Lower body fat = facial leanness — Chico’s sharpness is a body-fat story.'}
+};
+const WEAK_MAP={
+  thirds:['mew','tuck','wall'],
+  eye:['eye20','icesplash','massage'],
+  sym:['massage','fish','splash'],
+  shape:['tuck','rolls','mew']
+};
+const MET_LABEL={thirds:'Facial thirds',eye:'Eye area',sym:'Symmetry',shape:'Face shape'};
+
+/* ---------- state ---------- */
+let landmarker=null, stream=null, raf=null, hits=0, M=null, checked={}, scanStart=0;
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+function loadDay(){
+  try{const d=JSON.parse(localStorage.getItem('mog_day')||'{}');
+    if(d.date!==today()){checked={};saveDay();}else checked=d.check||{};}
+  catch(e){checked={};}
+}
+function saveDay(){localStorage.setItem('mog_day',JSON.stringify({date:today(),check:checked}));}
+function streak(){
+  let n=0, dt=new Date();
+  for(;;){const k=dt.toISOString().slice(0,10);
+    const d=JSON.parse(localStorage.getItem('mog_day_'+k)||'null');
+    const dd=JSON.parse(localStorage.getItem('mog_day')||'{}');
+    if((k===dd.date&&Object.values(dd.check||{}).every(v=>v))||d)n++,dt.setDate(dt.getDate()-1);
+    else if(k===today()){dt.setDate(dt.getDate()-1);continue;}else break;}
+  return Math.max(1,n);
+}
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  $(id).classList.add('on');window.scrollTo(0,0);}
+
+/* ---------- scan ---------- */
+async function goScan(){
+  show('sScan');$('scanErr').textContent='';$('scanMsg').textContent='loading face engine…';
+  $('camOff').style.display='flex';$('camOff').textContent='loading face engine…';hits=0;scanStart=Date.now();
+  try{
+    if(!landmarker){
+      const fileset=await FilesetResolver.forVisionTasks('./vision');
+      landmarker=await FaceLandmarker.createFromOptions(fileset,{
+        baseOptions:{modelAssetPath:'./models/face_landmarker.task',delegate:'CPU'},
+        runningMode:'VIDEO',numFaces:1, outputFacialTransformationMatrixes:false});
+    }
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640}},audio:false});
+    $('video').srcObject=stream;await $('video').play();
+    $('camOff').style.display='none';
+    loopScan();
+  }catch(e){
+    $('camOff').style.display='flex';
+    $('camOff').textContent='camera or engine unavailable: '+e.message;
+    $('scanErr').textContent='Tip: allow camera permission in Android settings → MogLab → Camera.';
+  }
+}
+function loopScan(){
+  const v=$('video');
+  if(!v.videoWidth){raf=requestAnimationFrame(loopScan);return;}
+  const now=performance.now();
+  let res=null;
+  try{res=landmarker.detectForVideo(v,now);}catch(e){}
+  const ov=$('ov');ov.width=v.videoWidth;ov.height=v.videoHeight;
+  const ctx=ov.getContext('2d');
+  if(res&&res.faceLandmarks&&res.faceLandmarks.length){
+    const lm=res.faceLandmarks[0];hits++;
+    ctx.fillStyle='rgba(245,197,66,.75)';
+    for(let i=0;i<lm.length;i+=6){const p=lm[i];
+      ctx.beginPath();ctx.arc(p.x*ov.width,p.y*ov.height,1.6,0,7);ctx.fill();}
+    const elapsed=(Date.now()-scanStart)/1000;
+    $('scanMsg').textContent=`reading landmarks… ${Math.min(99,Math.round(hits/15*100))}%`;
+    if(hits>=15){M=metrics(lm);finishScan();return;}
+  }else{
+    $('scanMsg').textContent='face not found — full face, good light';
+  }
+  raf=requestAnimationFrame(loopScan);
+}
+function stopScan(){
+  if(raf)cancelAnimationFrame(raf);raf=null;
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  show('sHome');
+}
+function finishScan(){
+  if(raf)cancelAnimationFrame(raf);raf=null;
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  renderResults();show('sResult');
+}
+
+/* ---------- results ---------- */
+function renderResults(){
+  const s=M.overall,[r,note]=rankOf(s);
+  $('scoreBig').textContent=s; $('rank').textContent=r; $('scoreNote').textContent=note;
+  const rows=[
+    ['thirds',M.thirdsScore,'Upper vs lower third balance — Chico is fully equal',`lower third share ${Math.round(M.lowerShare*100)}%`],
+    ['eye',M.eyeScore,`Canthal tilt ${M.tilt}° — positive tilt reads sharper`,`target ≈ +6°`],
+    ['sym',M.symScore,'Left/right balance of eyes and edges',`${M.tilt}° tilt diff`],
+    ['shape',M.shapeScore,`Detected: ${M.shape}`,'oval reads most harmonious']
+  ];
+  $('metrics').innerHTML=rows.map(([k,v,note,extra])=>`
+    <div class="card"><div class="row"><span class="mname">${MET_LABEL[k]} <span class="chip">${extra||''}</span></span>
+      <span class="mval">${v}/100</span></div>
+      <div class="barw"><div class="bar" style="width:${v}%"></div></div>
+      <div class="note">${note}</div></div>`).join('');
+  const weak=rows.map(x=>[x[0],x[1]]).sort((a,b)=>a[1]-b[1]).filter(x=>x[1]<92).slice(0,2);
+  $('weakBox').style.display=weak.length?'block':'none';
+  $('weakList').innerHTML=weak.map(([k,v])=>`${MET_LABEL[k]} (${v})`).join(' → ');
+  window.__weak=weak.map(x=>x[0]);
+}
+
+/* ---------- plan ---------- */
+function buildPlan(){
+  const weak=(window.__weak&&window.__weak.length)?window.__weak:['thirds','eye'];
+  const picks=[];
+  weak.forEach(k=>{const arr=WEAK_MAP[k]||WEAK_MAP.thirds;picks.push(arr[0],arr[1]);});
+  if(!picks.includes('hydro'))picks.push('hydro');
+  picks.push('burner');
+  return [...new Set(picks)];
+}
+function renderPlan(){
+  loadDay();
+  const ids=buildPlan();
+  $('exList').innerHTML=ids.map(id=>{const e=EX[id];const on=checked[id];
+    return `<div class="card ex"><div class="row"><div style="flex:1;padding-right:10px">
+      <h3>${e.i} ${e.n}</h3><div class="dose">${e.d} <span class="chip">${e.t}</span></div>
+      <div class="steps">${e.s.map((x,j)=>`${j+1}. ${x}`).join('<br>')}</div>
+      <div class="why">why: ${e.w}</div></div>
+      <button class="tick ${on?'done':''}" data-id="${id}">✓</button></div></div>`;}).join('');
+  $('exList').querySelectorAll('.tick').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.id;checked[id]=!checked[id];b.classList.toggle('done',!!checked[id]);
+    saveDay();updateGlow();});
+  $('dayTag').textContent='day · tailored to your scan · '+weak.map(k=>MET_LABEL[k]).join(' + ');
+  updateGlow();
+}
+function updateGlow(){
+  const ids=buildPlan(), done=ids.filter(i=>checked[i]).length;
+  const pct=Math.round(done/ids.length*100);
+  $('glowBar').style.width=pct+'%';$('glowPct').textContent=pct+'%';
+  const full=done===ids.length;
+  $('dayDone').style.display=full?'block':'none';
+  if(full){localStorage.setItem('mog_day_'+today(),'1');$('streakN').textContent=streak();}
+}
+function goPlan(){renderPlan();show('sPlan');}
+
+window.goScan=goScan;window.stopScan=stopScan;window.goPlan=goPlan;
+loadDay();
+</script>
+</body>
+</html>
